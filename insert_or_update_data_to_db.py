@@ -1,7 +1,7 @@
 import psycopg2
 from config import db_params
 from database import create_cars_table
-from main import driver, get_all_info_cars
+from scraper import driver, get_all_info_cars
 
 
 def insert_or_update_car_data(db_params, car_data):

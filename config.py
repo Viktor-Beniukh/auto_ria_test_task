@@ -3,16 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
+POSTGRES_NAME = os.getenv("POSTGRES_NAME")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 
 db_params = {
-    "dbname": DB_NAME,
-    "user": DB_USER,
-    "password": DB_PASSWORD,
-    "host": DB_HOST,
-    "port": DB_PORT,
+    "dbname": POSTGRES_NAME,
+    "user": POSTGRES_USER,
+    "password": POSTGRES_PASSWORD,
+    "host": POSTGRES_HOST,
+    "port": POSTGRES_PORT,
 }
