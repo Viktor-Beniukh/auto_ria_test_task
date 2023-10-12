@@ -33,3 +33,8 @@ Docker should be installed
 
 - Create docker image: `docker-compose build`
 - Run docker app: `docker-compose up`
+
+
+# Warning
+
+To test the script locally, you need to activate in requirements.txt `psycopg2`and deactivate `psycopg2-binary`
