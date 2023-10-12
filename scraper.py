@@ -8,11 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-chrome_options = webdriver.ChromeOptions()
-
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
 
 base_url = "https://auto.ria.com/uk/car/used/"
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=options)
 
 
 def scrape_cars_data(driver, url_car):
