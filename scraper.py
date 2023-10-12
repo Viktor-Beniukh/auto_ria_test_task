@@ -8,6 +8,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+chrome_options = webdriver.ChromeOptions()
+
 
 base_url = "https://auto.ria.com/uk/car/used/"
 driver = webdriver.Chrome()
@@ -85,7 +87,7 @@ def get_total_pages(page_limit=None, is_testing=False):
 
 def get_urls_cars(driver, page_limit=None):
     all_urls = []
-    num_pages = get_total_pages(page_limit=3)
+    num_pages = get_total_pages(page_limit=2)
 
     if page_limit is not None:
         num_pages = min(page_limit, num_pages)

@@ -16,3 +16,6 @@ db_params = {
     "host": POSTGRES_HOST,
     "port": POSTGRES_PORT,
 }
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")

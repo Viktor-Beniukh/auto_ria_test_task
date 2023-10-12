@@ -1,6 +1,6 @@
 import psycopg2
-from config import db_params
-from database import create_cars_table
+from settings.config import db_params
+from db_create.database import create_cars_table
 from scraper import driver, get_all_info_cars
 
 

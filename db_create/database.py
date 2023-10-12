@@ -1,6 +1,6 @@
 import psycopg2
 
-from config import db_params
+from settings.config import db_params
 
 
 def create_cars_table(db_params):
