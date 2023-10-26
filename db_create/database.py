@@ -3,7 +3,7 @@ import psycopg2
 from settings.config import db_params
 
 
-def create_cars_table(db_params):
+def create_cars_table():
     try:
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
@@ -21,7 +21,7 @@ def create_cars_table(db_params):
             images_count INT,
             car_number VARCHAR(255),
             car_vin VARCHAR(255),
-            datetime_found TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            datetime_found TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );
         """
 
@@ -38,4 +38,4 @@ def create_cars_table(db_params):
 
 
 if __name__ == "__main__":
-    create_cars_table(db_params)
+    create_cars_table()

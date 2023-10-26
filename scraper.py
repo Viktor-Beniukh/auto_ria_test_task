@@ -12,28 +12,28 @@ options = webdriver.ChromeOptions()
 options.add_argument("--headless")
 
 base_url = "https://auto.ria.com/uk/car/used/"
-driver = webdriver.Chrome(options=options)
+_driver = webdriver.Chrome(options=options)
 
 
-def scrape_cars_data(driver, url_car):
+def scrape_cars_data(_driver, url_car):
     resp = requests.get(url_car).text
     car_soup = BeautifulSoup(resp, "html.parser")
 
-    driver.get(url_car)
+    _driver.get(url_car)
     time.sleep(5)
 
-    deleted_notice = driver.find_elements(By.CSS_SELECTOR, "div.notice_head")
+    deleted_notice = _driver.find_elements(By.CSS_SELECTOR, "div.notice_head")
 
     if deleted_notice:
         print("Announcement removed")
         return None
 
     try:
-        cross_element = WebDriverWait(driver, 20).until(
+        cross_element = WebDriverWait(_driver, 20).until(
             EC.presence_of_element_located((By.CLASS_NAME, "phone_show_link"))
         )
-        driver.execute_script("arguments[0].click();", cross_element)
-        phone_element = driver.find_element(By.CSS_SELECTOR, "span[data-phone-number]")
+        _driver.execute_script("arguments[0].click();", cross_element)
+        phone_element = _driver.find_element(By.CSS_SELECTOR, "span[data-phone-number]")
     except NoSuchElementException:
         print("The 'phone_show_link' element was not found on this page")
         return None
@@ -60,22 +60,22 @@ def scrape_cars_data(driver, url_car):
 
 
 def get_total_pages(page_limit=None, is_testing=False):
-    driver.get(base_url)
-    next_button = driver.find_element(By.CSS_SELECTOR, "a.page-link.js-next")
+    _driver.get(base_url)
+    next_button = _driver.find_element(By.CSS_SELECTOR, "a.page-link.js-next")
     total_pages = 1
 
     while (page_limit is None or total_pages < page_limit) and next_button.is_enabled():
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        _driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         time.sleep(10)
 
         next_button.click()
 
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(_driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "a.page-link.js-next"))
         )
 
-        next_button = driver.find_element(By.CSS_SELECTOR, "a.page-link.js-next")
+        next_button = _driver.find_element(By.CSS_SELECTOR, "a.page-link.js-next")
 
         total_pages += 1
 
@@ -85,19 +85,19 @@ def get_total_pages(page_limit=None, is_testing=False):
     return total_pages
 
 
-def get_urls_cars(driver, page_limit=None):
+def get_urls_cars(_driver, page_limit=None):
     all_urls = []
-    num_pages = get_total_pages(page_limit=2)
+    num_pages = get_total_pages(page_limit=1)
 
     if page_limit is not None:
         num_pages = min(page_limit, num_pages)
 
     for page in range(1, num_pages + 1):
-        driver.get(base_url + f"?page={page}")
+        _driver.get(base_url + f"?page={page}")
 
         time.sleep(10)
 
-        response = driver.page_source
+        response = _driver.page_source
         soup = BeautifulSoup(response, "html.parser")
         urls_on_page = [
             url_car.get("href") for url_car in soup.select("div.content a.address")
@@ -107,12 +107,12 @@ def get_urls_cars(driver, page_limit=None):
     return all_urls
 
 
-def get_all_info_cars(driver):
+def get_all_info_cars(_driver):
     all_cars_data = []
-    urls = get_urls_cars(driver=driver)
+    urls = get_urls_cars(_driver=_driver)
 
     for url_car in urls:
-        car_data = scrape_cars_data(driver, url_car)
+        car_data = scrape_cars_data(_driver, url_car)
         if car_data:
             all_cars_data.append(car_data)
 

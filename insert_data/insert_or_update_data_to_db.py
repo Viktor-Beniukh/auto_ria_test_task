@@ -1,73 +1,58 @@
 import psycopg2
+
 from settings.config import db_params
 from db_create.database import create_cars_table
-from scraper import driver, get_all_info_cars
+from scraper import _driver, get_all_info_cars
 
 
-def insert_or_update_car_data(db_params, car_data):
+def insert_or_update_car_data(car_data):
     try:
-        conn = psycopg2.connect(**db_params)
-        cur = conn.cursor()
 
-        cur.execute("SELECT id FROM cars WHERE url = %s", (car_data["url"],))
-        existing_id = cur.fetchone()
+        with psycopg2.connect(**db_params) as conn, conn.cursor() as cur:
+            cur.execute("SELECT id FROM cars WHERE url = %s", (car_data["url"],))
+            existing_id = cur.fetchone()
 
-        if existing_id:
-            update_query = """
-            UPDATE cars
-            SET title = %s, price_usd = %s, odometer = %s, username = %s, phone_number = %s,
-                image_url = %s, images_count = %s, car_number = %s, car_vin = %s
-            WHERE id = %s;
-            """
-            cur.execute(
-                update_query,
-                (
-                    car_data["title"],
-                    car_data["price_usd"],
-                    car_data["odometer"],
-                    car_data["username"],
-                    car_data["phone_number"],
-                    car_data["image_url"],
-                    car_data["image_count"],
-                    car_data["car_number"],
-                    car_data["car_vin"],
-                    existing_id[0],
-                ),
-            )
-        else:
-            insert_query = """
-            INSERT INTO cars (url, title, price_usd, odometer, username, phone_number, image_url, images_count, car_number, car_vin)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-            """
-            cur.execute(
-                insert_query,
-                (
-                    car_data["url"],
-                    car_data["title"],
-                    car_data["price_usd"],
-                    car_data["odometer"],
-                    car_data["username"],
-                    car_data["phone_number"],
-                    car_data["image_url"],
-                    car_data["image_count"],
-                    car_data["car_number"],
-                    car_data["car_vin"],
-                ),
-            )
+            field_values = {
+                "title": car_data["title"],
+                "price_usd": car_data["price_usd"],
+                "odometer": car_data["odometer"],
+                "username": car_data["username"],
+                "phone_number": car_data["phone_number"],
+                "image_url": car_data["image_url"],
+                "images_count": car_data["image_count"],
+                "car_number": car_data["car_number"],
+                "car_vin": car_data["car_vin"]
+            }
 
-        conn.commit()
-        cur.close()
-        conn.close()
+            if existing_id:
+                update_query = """
+                UPDATE cars
+                SET title = %(title)s, price_usd = %(price_usd)s, odometer = %(odometer)s, 
+                    username = %(username)s, phone_number = %(phone_number)s, image_url = %(image_url)s, 
+                    images_count = %(images_count)s, car_number = %(car_number)s, car_vin = %(car_vin)s
+                WHERE id = %(id)s;
+                """
+                field_values["id"] = existing_id[0]
+                cur.execute(update_query, field_values)
+            else:
+                insert_query = """
+                INSERT INTO cars (url, title, price_usd, odometer, username, phone_number, image_url, images_count, car_number, car_vin)
+                VALUES (%(url)s, %(title)s, %(price_usd)s, %(odometer)s, %(username)s, %(phone_number)s, %(image_url)s, %(images_count)s, %(car_number)s, %(car_vin)s);
+                """
+                field_values["url"] = car_data["url"]
+                cur.execute(insert_query, field_values)
 
+            conn.commit()
         print("Data inserted/updated successfully")
-
     except Exception as error:
         print(f"Error inserting/updating data: {error}")
 
 
 if __name__ == "__main__":
-    create_cars_table(db_params)
-    scraped_data = get_all_info_cars(driver)
+    create_cars_table()
+    scraped_data = get_all_info_cars(_driver)
 
     for data in scraped_data:
-        insert_or_update_car_data(db_params, data)
+        insert_or_update_car_data(data)
+
+    _driver.quit()

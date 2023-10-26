@@ -1,12 +1,11 @@
 from celery import Celery
 from celery.schedules import crontab
 
-
 from settings.config import CELERY_BROKER_URL
-
 
 app = Celery("auto_ria_test_task", broker=CELERY_BROKER_URL, include=["tasks"])
 
+app.conf.timezone = "Europe/Kiev"
 
 app.conf.beat_schedule = {
     "run-script-every-day": {
@@ -16,4 +15,7 @@ app.conf.beat_schedule = {
 }
 
 
-app.conf.timezone = "Europe/Kyiv"
+
+
+# minute="*/5"
+#
