@@ -1,6 +1,6 @@
 import re
-import time
 import requests
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -20,7 +20,6 @@ def scrape_cars_data(_driver, url_car):
     car_soup = BeautifulSoup(resp, "html.parser")
 
     _driver.get(url_car)
-    time.sleep(5)
 
     deleted_notice = _driver.find_elements(By.CSS_SELECTOR, "div.notice_head")
 
@@ -29,7 +28,7 @@ def scrape_cars_data(_driver, url_car):
         return None
 
     try:
-        cross_element = WebDriverWait(_driver, 20).until(
+        cross_element = WebDriverWait(_driver, 1).until(
             EC.presence_of_element_located((By.CLASS_NAME, "phone_show_link"))
         )
         _driver.execute_script("arguments[0].click();", cross_element)
@@ -67,11 +66,9 @@ def get_total_pages(page_limit=None, is_testing=False):
     while (page_limit is None or total_pages < page_limit) and next_button.is_enabled():
         _driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-        time.sleep(10)
-
         next_button.click()
 
-        WebDriverWait(_driver, 10).until(
+        WebDriverWait(_driver, 1).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "a.page-link.js-next"))
         )
 
@@ -87,15 +84,13 @@ def get_total_pages(page_limit=None, is_testing=False):
 
 def get_urls_cars(_driver, page_limit=None):
     all_urls = []
-    num_pages = get_total_pages(page_limit=5)
+    num_pages = get_total_pages(page_limit=1)
 
     if page_limit is not None:
         num_pages = min(page_limit, num_pages)
 
     for page in range(1, num_pages + 1):
         _driver.get(base_url + f"?page={page}")
-
-        time.sleep(10)
 
         response = _driver.page_source
         soup = BeautifulSoup(response, "html.parser")

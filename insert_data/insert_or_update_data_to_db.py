@@ -1,3 +1,5 @@
+import time
+
 import psycopg2
 
 from settings.config import db_params
@@ -49,6 +51,7 @@ def insert_or_update_car_data(car_data):
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     create_cars_table()
     scraped_data = get_all_info_cars(_driver)
 
@@ -56,3 +59,7 @@ if __name__ == "__main__":
         insert_or_update_car_data(data)
 
     _driver.quit()
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Script run time: {execution_time} second")
