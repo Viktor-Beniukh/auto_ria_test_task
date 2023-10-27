@@ -14,7 +14,7 @@ cd auto_ria_test_task
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python insert_or_update_data_to_db.py
+
 
 ```
 You need to create `.env` file and add there the variables with your according values:
@@ -35,6 +35,8 @@ Docker should be installed
 - Run docker app: `docker-compose up`
 
 
-# Warning
-
-To test the script locally, you need to activate in requirements.txt `psycopg2`and deactivate `psycopg2-binary`
+## Features
+- Realized a task to create table in db, to scrape info from site and write the data to db;
+- Realized a task to dump data from db to csv file;
+- The tasks are started periodically at a specified time;
+- These tasks can be monitored by Flower.
