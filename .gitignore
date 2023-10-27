@@ -9,3 +9,5 @@
 *.pyc
 /pg_data/
 /celerybeat-schedule
+/backup_data/dumps/
+/dumps/

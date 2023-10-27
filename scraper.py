@@ -87,7 +87,7 @@ def get_total_pages(page_limit=None, is_testing=False):
 
 def get_urls_cars(_driver, page_limit=None):
     all_urls = []
-    num_pages = get_total_pages(page_limit=1)
+    num_pages = get_total_pages(page_limit=5)
 
     if page_limit is not None:
         num_pages = min(page_limit, num_pages)

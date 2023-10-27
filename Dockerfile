@@ -22,6 +22,11 @@ RUN apt-get update \
 
 RUN apt-get update && apt-get install -y python3-gdbm
 
+RUN mkdir -p /code/dumps
+
+RUN chown -R seluser:seluser /code/dumps
+RUN chmod -R 755 /code/dumps
+
 
 COPY requirements.txt requirements.txt
 

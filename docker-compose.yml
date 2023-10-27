@@ -29,6 +29,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./:/code
+      - ./dumps:/code/dumps
     command: "celery -A celery_config:app worker --loglevel=info"
     depends_on:
       - web
