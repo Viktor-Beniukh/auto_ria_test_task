@@ -50,14 +50,18 @@ def insert_or_update_car_data(car_data):
         print(f"Error inserting/updating data: {error}")
 
 
-if __name__ == "__main__":
-    start_time = time.time()
+def insert_or_update_data():
     create_cars_table()
     scraped_data = get_all_info_cars(_driver)
 
     for data in scraped_data:
         insert_or_update_car_data(data)
 
+
+if __name__ == "__main__":
+    start_time = time.time()
+
+    insert_or_update_data()
     _driver.quit()
 
     end_time = time.time()
